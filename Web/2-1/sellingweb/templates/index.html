@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>星際綿柔眠被</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="{{ url_for('static', filename='images/icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('static', filename='images/icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('static', filename='images/icons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='images/icons/site.html') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='images/icons/safari-pinned-tab.svg') }}" color="#666666">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/icons/favicon.ico') }}">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="{{ url_for('static', filename='images/icons/browserconfig.xml') }}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/owl-carousel/owl.carousel.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/magnific-popup/magnific-popup.css') }}">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/demos/demo-12.css') }}">
+</head>
+
+<body>
+<div class="page-wrapper">
+    <header class="header header-9">
+        <div class="header-middle sticky-header">
+            <div class="container">
+                <div class="header-left">
+                    <button class="mobile-menu-toggler">
+                        <span class="sr-only">Toggle mobile menu</span>
+                        <i class="icon-bars"></i>
+                    </button>
+
+                    <a href="{{ url_for('index') }}" class="logo">
+                        <img src="{{ url_for('static', filename='images/demos/demo-12/logo.png') }}" alt="Molla Logo"
+                             width="82" height="25">
+                    </a>
+                    <nav class="main-nav">
+                        <ul class="menu sf-arrows">
+                            <li>
+                                <a href="{{ url_for('index') }}" class="sf-with-ul">主頁</a>
+                                <!--TODO(edit nav li css without >)-->
+                                <ul>
+                                    <li><a href="{{ url_for('index') }}">前往主頁</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('shop') }}" class="sf-with-ul">商店</a>
+                                <ul>
+                                    <li><a href="{{ url_for('shop') }}">前往商店</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="sf-with-ul">相關資訊</a>
+
+                                <ul>
+                                    <li><a href="{{ url_for('about') }}">關於我們</a></li>
+                                    <li><a href="{{ url_for('contact') }}">聯絡我們</a></li>
+                                    <li><a href="{{ url_for('faq') }}">常見問題</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('login') }}" class="sf-with-ul">
+                                    {% if username != None %}
+                                    {{ username }}
+                                    {% else %}
+                                    登入
+                                    {% endif %}
+                                </a>
+                                <ul>
+                                    <li><a href="{{ url_for('login') }}">
+                                        {% if username != None %}
+                                        會員設定
+                                        {% else %}
+                                        登入
+                                        {% endif %}
+                                    </a></li>
+                                </ul>
+                            </li>
+                        </ul><!-- End .menu -->
+                    </nav><!-- End .main-nav -->
+                </div><!-- End .header-left -->
+
+                <div class="header-right">
+                    <div class="dropdown cart-dropdown">
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="cart-count"> {{ total_quantity }}</span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-cart-products">
+                                {% set total_quantity = shopping_cart|length %} {# Replace this with the actual length
+                                #}
+
+                                {% for i in range(total_quantity) %}
+                                {% set item = shopping_cart[i] %}
+                                <div class="product">
+                                    <div class="product-cart-details">
+                                        <h4 class="product-title">
+                                            <a href="{{ url_for('product') }}">
+                                                {% if item[4] in products %}
+                                                {{ products[item[4]].productName }}
+                                                {% else %}
+                                                Product Not Found
+                                                {% endif %}
+                                            </a>
+                                        </h4>
+                                        {% for key, product in products.items() %}
+                                        {% if item[4] == product.productId %}
+                                        <span class="cart-product-info">
+                                            <span class="cart-product-qty">{{ item[2] }}</span> x ${{ product.price }}.00<br>
+                                        </span>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div><!-- End .product-cart-details -->
+                                    <figure class="product-image-container">
+                                        <a href="{{ url_for('product') }}" class="product-image">
+                                            <img src="{{url_for('static', filename='images/products/single/pd' ~ item[4] ~ '/product-' ~ item[4] ~ '-1.jpg')}}"
+                                                 alt="product">
+                                        </a>
+                                    </figure>
+                                </div><!-- End .product -->
+                                {% endfor %}
+                            </div><!-- End .cart-product -->
+
+
+                            <div class="dropdown-cart-total">
+                                <span>總計</span>
+
+                                <span class="cart-total-price">${{ total_price }}.00</span>
+                            </div>
+                            <!-- End .dropdown-cart-total -->
+
+                            <div class="dropdown-cart-action">
+                                <a href="{{ url_for('cart') }}" class="btn btn-primary">查看購物車</a>
+                                <a href="{{ url_for('checkout') }}"
+                                   class="btn btn-outline-primary-2"><span>下單</span><i
+                                        class="icon-long-arrow-right"></i></a>
+                            </div>
+                            <!-- End .dropdown-cart-total -->
+                        </div><!-- End .dropdown-menu -->
+                    </div><!-- End .cart-dropdown -->
+                </div><!-- End .header-right -->
+            </div><!-- End .container -->
+        </div><!-- End .header-middle -->
+    </header><!-- End .header -->
+
+    <main class="main">
+        <div class="intro-slider-container mb-3 mb-lg-5">
+            <div class="intro-slider owl-carousel owl-simple owl-nav-inside owl-light" data-toggle="owl"
+                 data-owl-options='{"nav":false, "dots": false, "loop": false}'>
+                <div class="intro-slide"
+                     style="background-image: url(../static/images/demos/demo-12/slider/slide-1.png);">
+                    <div class="container intro-content text-center">
+                        <h3 class="intro-subtitle text-white">一個充滿幻想、美好的地方，徜徉在無憂的睡眠宇宙吧 !</h3>
+                        <!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title text-white">星際綿柔眠被</h1><!-- End .intro-title -->
+                        <div class="intro-content text-danger">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            {% for category, message in messages %}
+                            {% if category == 'error' %}
+                            {{ message }}
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <a href="{{ url_for('shop') }}" class="btn btn-outline-white">
+                            <span>前往商店探索</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </a>
+                    </div><!-- End .intro-content -->
+                </div><!-- End .intro-slide -->
+            </div><!-- End .intro-slider owl-carousel owl-simple -->
+
+            <span class="slider-loader text-white"></span><!-- End .slider-loader -->
+        </div><!-- End .intro-slider-container -->
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="banner banner-display banner-link-anim banner-title-hidden">
+                        <a href="#">
+                            <img src="{{ url_for('static', filename='images/demos/demo-12/banners/banner-1.jpg') }}"
+                                 alt="Banner">
+                        </a>
+
+                        <div class="banner-content banner-content-center">
+                            <h3 class="banner-title text-white"><a href="#">丹麥原裝進口赫辛基被單組</a></h3>
+                            <!-- End .banner-title -->
+
+                            <a href="/product/{{('4')}}" class="btn btn-outline-white banner-link">手刀購買！</a>
+
+
+                        </div><!-- End .banner-content -->
+                    </div><!-- End .banner -->
+                </div><!-- End .col-md-6 -->
+
+                <div class="col-md-6">
+                    <div class="banner banner-display banner-link-anim banner-title-hidden">
+                        <a href="#">
+                            <img src="{{ url_for('static', filename='images/demos/demo-12/banners/banner-2.jpg') }}"
+                                 alt="Banner">
+                        </a>
+
+                        <div class="banner-content banner-content-center">
+                            <h3 class="banner-title text-white"><a href="#">天然乳膠枕</a></h3>
+                            <!-- End .banner-title -->
+                            <a href="/product/{{('2')}}" class="btn btn-outline-white banner-link">下單去！</a>
+                        </div><!-- End .banner-content -->
+                    </div><!-- End .banner -->
+                    <div class="banner banner-display banner-link-anim banner-title-hidden">
+                        <a href="#">
+                            <img src="{{ url_for('static', filename='images/demos/demo-12/banners/banner-3.jpg') }}"
+                                 alt="Banner">
+                        </a>
+
+                        <div class="banner-content banner-content-center">
+                            <h3 class="banner-title text-white"><a href="#">天絲床包組</a></h3>
+                            <!-- End .banner-title -->
+                            <a href="/product/{{('3')}}" class="btn btn-outline-white banner-link">馬上搶購！</a>
+                        </div><!-- End .banner-content -->
+                    </div><!-- End .banner -->
+                </div><!-- End .col-md-6 -->
+            </div><!-- End .row -->
+
+            <div class="mb-3"></div><!-- End .mb-3 -->
+        </div><!-- End .container -->
+
+        <div class="bg-lighter pt-5 pb-5 mb-5">
+            <div class="container">
+                <div class="heading text-center mb-4">
+                    <h2 class="title">商品種類</h2><!-- End .title -->
+                    <p class="title-desc">多種寢具，隨心選擇。枕頭、棉被、床墊 . . . . . . </p><!-- End .title-desc -->
+                </div><!-- End .heading -->
+
+                <div class="owl-carousel owl-simple" data-toggle="owl" data-owl-options='{
+                            "nav": false,
+                            "dots": true,
+                            "margin": 20,
+                            "loop": false,
+                            "responsive": {
+                                "0": {
+                                    "items":2
+                                },
+                                "480": {
+                                    "items":2
+                                },
+                                "768": {
+                                    "items":3
+                                },
+                                "992": {
+                                    "items":4
+                                },
+                                "1200": {
+                                    "items":4,
+                                    "nav": true
+                                }
+                            }
+                        }'>
+
+
+                    {% for key, product in products.items() %}
+                    <div class="product product-4">
+                        <figure class="product-media">
+                            <a href="/product/{{ product.productId }}">
+                                <img src="{{ url_for('static', filename='images/demos/demo-12/products/product-' ~ key ~ '.jpg') }}"
+                                     alt="Product image"
+                                     class="product-image">
+                                <img src="{{ url_for('static', filename='images/demos/demo-12/products/product-' ~ key ~ '-' ~ key ~ '.jpg') }}"
+                                     alt="Product image" class="product-image-hover">
+                            </a>
+
+                            <div class="product-action">
+                                <form action="/addToShoppingCart" method="post" style="width: 100%">
+                                    <input type="hidden" name="productId" value="{{ product.productId }}">
+                                    <label style="display: none">
+                                        <input type="number" name="quantity" value="1" min="1">
+                                    </label> <!-- 添加数量字段 -->
+                                    <button type="submit" class="btn-product btn-cart"
+                                            style="width: 100%; border: none;"><span>加入購物車</span>
+                                    </button>
+                                </form>
+                            </div><!-- End .product-action -->
+                        </figure><!-- End .product-media -->
+
+                        <div class="product-body">
+                            <div class="product-cat">
+                                <a href="#">{{ product.category }}</a>
+                            </div><!-- End .product-cat -->
+                            <h3 class="product-title"><a href="{{ url_for('product') }}">{{ product.productName }}</a>
+                            </h3>
+                            <div class="product-price">
+                                ${{ product.price }}.00
+                            </div><!-- End .product-price -->
+                        </div><!-- End .product-body -->
+                    </div><!-- End .product -->
+                    {% endfor %}
+                </div><!-- End .owl-carousel -->
+            </div><!-- End .container -->
+        </div><!-- End .bg-lighter pt-5 pb-5 -->
+    </main><!-- End .main -->
+    <footer class="footer footer-2">
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="footer-copyright">Copyright © 2023 Mirai. All Rights Reserved.</p>
+                <!-- End .footer-copyright -->
+                <ul class="footer-menu">
+                    <li><a href="#">Terms Of Use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul><!-- End .footer-menu -->
+
+                <div class="social-icons social-icons-color">
+                    <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i
+                            class="icon-facebook-f"></i></a>
+                    <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i
+                            class="icon-twitter"></i></a>
+                    <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i
+                            class="icon-instagram"></i></a>
+                    <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i
+                            class="icon-youtube"></i></a>
+                    <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i
+                            class="icon-pinterest"></i></a>
+                </div><!-- End .soial-icons -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-bottom -->
+    </footer><!-- End .footer -->
+</div><!-- End .page-wrapper -->
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+<div class="mobile-menu-container mobile-menu-light">
+    <div class="mobile-menu-wrapper">
+        <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+        <form action="#" method="get" class="mobile-search">
+            <label for="mobile-search" class="sr-only">Search</label>
+            <input type="search" class="form-control" name="mobile-search" id="mobile-search"
+                   placeholder="Search in..." required>
+            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+        </form>
+
+        <nav class="mobile-nav">
+            <ul class="mobile-menu">
+                <li class="active">
+                    <a href="{{ url_for('index') }}">首頁</a>
+
+                    <ul>
+                        <li><a href="{{ url_for('index') }}">回到首頁</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ url_for('shop') }}">商店</a>
+                    <ul>
+                        <li><a href="{{ url_for('shop') }}">前往商店</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">相關資訊</a>
+                    <ul>
+                        <li><a href="{{ url_for('about') }}">關於我們</a></li>
+                        <li><a href="{{ url_for('contact') }}">聯絡我們</a></li>
+                        <li><a href="{{ url_for('faq') }}">常見問題</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ url_for('login') }}">
+                        {% if username != None %}
+                        {{ username }}
+                        {% else %}
+                        登入
+                        {% endif %}
+                    </a>
+                    <ul>
+                        <li><a href="{{ url_for('login') }}">
+                            {% if username != None %}
+                            會員設定
+                            {% else %}
+                            登入
+                            {% endif %}
+                        </a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav><!-- End .mobile-nav -->
+
+        <div class="social-icons">
+            <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+        </div><!-- End .social-icons -->
+    </div><!-- End .mobile-menu-wrapper -->
+</div><!-- End .mobile-menu-container -->
+<!-- Plugins JS File -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.hoverIntent.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.waypoints.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/superfish.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/owl.carousel.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-input-spinner.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.magnific-popup.min.js') }}"></script>
+
+<!-- Main JS File -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demos/demo-12.js') }}"></script>
+</body>
+
+
+<!-- molla/index-12.html  22 Nov 2019 09:58:58 GMT -->
+
+</html>

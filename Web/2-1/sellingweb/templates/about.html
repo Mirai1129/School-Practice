@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>星際綿柔眠被 - 關於我們</title>
+    <meta name="keywords" content="HTML5 Template"/>
+    <meta name="description" content="Molla - Bootstrap eCommerce Template"/>
+    <meta name="author" content="p-themes"/>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/images/icons/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/images/icons/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/images/icons/favicon-16x16.png"/>
+    <link rel="manifest" href="../static/images/icons/site.html"/>
+    <link rel="mask-icon" href="../static/images/icons/safari-pinned-tab.svg" color="#666666"/>
+    <link rel="shortcut icon" href="../static/images/icons/favicon.ico"/>
+    <meta name="apple-mobile-web-app-title" content="Molla"/>
+    <meta name="application-name" content="Molla"/>
+    <meta name="msapplication-TileColor" content="#cc9966"/>
+    <meta name="msapplication-config" content="../assets/images/icons/browserconfig.xml"/>
+    <meta name="theme-color" content="#ffffff"/>
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css"/>
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="../static/css/style.css"/>
+</head>
+
+<body>
+<div class="page-wrapper">
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <!-- End .header-left -->
+
+                <div class="header-right">
+                    <ul class="top-menu">
+                        <li>
+                            <a href="#">相關連結</a>
+                            <ul>
+                                <li>
+                                    <a href="{{url_for('about')}}">關於我們</a>
+                                </li>
+                                <li>
+                                    <a href="{{url_for('contact')}}">聯絡我們</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('dashboard') }}"><i class="icon-user"></i>
+                                        <p>
+                                            {% if username != None %}
+                                            {{ username }}
+                                            {% else %}
+                                            登入
+                                            {% endif %}
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- End .top-menu -->
+                </div>
+                <!-- End .header-right -->
+            </div>
+            <!-- End .container -->
+        </div>
+        <!-- End .header-top -->
+
+        <div class="header-middle sticky-header">
+            <div class="container">
+                <div class="header-left">
+                    <button class="mobile-menu-toggler">
+                        <span class="sr-only">Toggle mobile menu</span>
+                        <i class="icon-bars"></i>
+                    </button>
+
+                    <a href="{{url_for('index')}}" class="logo"><img src="../static/images/logo.png" alt="Molla Logo" width="105"
+                                                           height="25"/></a>
+
+                    <nav class="main-nav">
+                        <ul class="menu sf-arrows">
+                            <li>
+                                <a href="{{url_for('index')}}" class="sf-with-ul">主頁</a>
+                                <!--TODO(edit nav li css without >)-->
+                                <ul>
+                                    <li><a href="{{url_for('index')}}">前往主頁</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{url_for('shop')}}" class="sf-with-ul">商店</a>
+                                <ul>
+                                    <li><a href="{{url_for('shop')}}">前往商店</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" class="sf-with-ul">相關資訊</a>
+
+                                <ul>
+                                    <li><a href="{{url_for('about')}}">關於我們</a></li>
+                                    <li><a href="{{url_for('contact')}}">聯絡我們</a></li>
+                                    <li><a href="{{url_for('faq')}}">常見問題</a></li>
+                                </ul>
+                            </li>
+                        </ul><!-- End .menu -->
+                    </nav><!-- End .main-nav -->
+                </div>
+                <!-- End .header-left -->
+
+                <div class="header-right">
+                    <div class="header-search">
+                        <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+                        <form action="#" method="get">
+                            <div class="header-search-wrapper">
+                                <label for="q" class="sr-only">Search</label>
+                                <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
+                                       required/>
+                            </div>
+                            <!-- End .header-search-wrapper -->
+                        </form>
+                    </div>
+                    <!-- End .header-search -->
+
+                    <div class="dropdown cart-dropdown">
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="cart-count"> {{ total_quantity }}</span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-cart-products">
+                                {% for item in shopping_cart %}
+                                <div class="product">
+                                    <div class="product-cart-details">
+                                        <h4 class="product-title">
+                                            <a href="{{ url_for('product') }}">
+                                                {% if item[4] in products %}
+                                                {{ products[item[4]].productName }}
+                                                {% else %}
+                                                Product Not Found
+                                                {% endif %}
+                                            </a>
+                                        </h4>
+                                        <span class="cart-product-info">
+                            <span class="cart-product-qty">{{ item[2] }}</span> x ${{ item[1] }}.00
+                        </span>
+                                    </div><!-- End .product-cart-details -->
+                                    <figure class="product-image-container">
+                                        <a href="{{ url_for('product') }}" class="product-image">
+                                            <img src="{{url_for('static', filename='images/products/single/pd' ~ item[4] ~ '/product-' ~ item[4] ~ '-1.jpg')}}"
+                                                 alt="product">
+                                        </a>
+                                    </figure>
+                                </div><!-- End .product -->
+                                {% endfor %}
+                            </div><!-- End .cart-product -->
+
+                            <div class="dropdown-cart-total">
+                                <span>Total</span>
+                                <span class="cart-total-price">${{ total_price }}.00</span>
+                            </div><!-- End .dropdown-cart-total -->
+
+                            <div class="dropdown-cart-action">
+                                <a href="{{ url_for('cart') }}" class="btn btn-primary">查看購物車</a>
+                                <a href="{{ url_for('checkout') }}" class="btn btn-outline-primary-2"><span>下單</span><i
+                                        class="icon-long-arrow-right"></i></a>
+                            </div><!-- End .dropdown-cart-total -->
+                        </div><!-- End .dropdown-menu -->
+                    </div>
+                    <!-- End .cart-dropdown -->
+                </div>
+                <!-- End .header-right -->
+            </div>
+            <!-- End .container -->
+        </div>
+        <!-- End .header-middle -->
+    </header>
+    <!-- End .header -->
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('../static/images/demos/demo-12/aboutbgjpg.jpg'); background-size: cover;">
+            <div class="container">
+                <h1 class="page-title">關於我們<span style="color: white">星際棉柔是 . . . . . . </span></h1>
+            </div><!-- End .container -->
+        </div>
+
+        <!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{url_for('index')}}">主頁</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">相關資訊</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">關於我們</li>
+                </ol>
+            </div>
+            <!-- End .container -->
+        </nav>
+        <!-- End .breadcrumb-nav -->
+
+        <div class="page-content pb-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="about-text text-center mt-3">
+                            <h2 class="title text-center mb-2">Hi , 這裡 !</h2><!-- End .title text-center mb-2 -->
+                            <p>星際棉柔棉被，創立於 2023 年。在一個如似夢幻般泡影的夢中，創辦人之一 EricMa
+                                夢到在一片宇宙中翱翔，化作人馬座的一匹飛馬，剎那間，一片巨大的棉被飛撲而來 . . . 「這就是軟綿綿的感覺啊！」馬兒說道。
+                                翌日，Eric Ma 告訴了愛睡覺的友人
+                                LaiMO，驚奇的發現他也做了相同的夢，兩位人馬座一同踏著達達馬蹄，奔上通往宇宙無限盡頭的情路。</p>
+                            <br>
+                        </div>
+                        <!-- End .about-text -->
+                    </div>
+                    <!-- End .col-lg-10 offset-1 -->
+                </div>
+                <!-- End .row -->
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="icon-box icon-box-sm text-center">
+                            <span class="icon-box-icon"><i class="icon-puzzle-piece"></i></span>
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">設計品質</h3><!-- End .icon-box-title -->
+                                <p>
+                                    我們擁有世界上獨一無二的寢具樣式，設計團隊更是這方面的絕對專家，商品使用起來非常舒服，不在話下。結合了無憂的睡眠元素，還融入了藝術成分，睡眠界的精品就在星際棉柔 ! <br/>
+                                </p>
+                            </div>
+                            <!-- End .icon-box-content -->
+                        </div>
+                        <!-- End .icon-box -->
+                    </div>
+                    <!-- End .col-lg-4 col-sm-6 -->
+
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="icon-box icon-box-sm text-center">
+                            <span class="icon-box-icon"><i class="icon-life-ring"></i></span>
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">專業支援</h3><!-- End .icon-box-title -->
+                                <p>
+                                    量身訂做個人的寢具，從床頭到床尾，我們不放過任何一項 ! 歡迎聯絡，洽談客製化服務。我們以絕對完美的寢具商聞名於世，無須擔憂品質，若使用上有任何疑慮請盡速向客服反應。<br/>
+                                </p>
+                            </div>
+                            <!-- End .icon-box-content -->
+                        </div>
+                        <!-- End .icon-box -->
+                    </div>
+                    <!-- End .col-lg-4 col-sm-6 -->
+
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="icon-box icon-box-sm text-center">
+                            <span class="icon-box-icon"><i class="icon-heart-o"></i></span>
+                            <div class="icon-box-content">
+                                <h3 class="icon-box-title">愛與希望</h3><!-- End .icon-box-title -->
+                                <p>
+                                    本公司總所得之5%將捐贈歡懷弱勢公益團體，永續發展公益社會，符合企業社會責任。定期捐贈寢具至弱勢團體，日子再怎麼難過，睡也要睡得好 ! <br/>
+                                </p>
+                            </div>
+                            <!-- End .icon-box-content -->
+                        </div>
+                        <!-- End .icon-box -->
+                    </div>
+                    <!-- End .col-lg-4 col-sm-6 -->
+                </div>
+                <!-- End .row -->
+            </div>
+            <!-- End .container -->
+
+            <div class="mb-2"></div>
+            <!-- End .mb-2 -->
+
+            <div class="bg-image pt-7 pb-5 pt-md-12 pb-md-9"
+                 style="background-image: url(../static/images/backgrounds/bg-4.jpg)">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6 col-md-3">
+                            <div class="count-container text-center">
+                                <div class="count-wrapper text-white">
+                                    <span class="count" data-from="1" data-to="1" data-speed="3000"
+                                          data-refresh-interval="50"></span>k+
+                                </div>
+                                <!-- End .count-wrapper -->
+                                <h3 class="count-title text-white">已累積的快樂顧客</h3><!-- End .count-title -->
+                            </div>
+                            <!-- End .count-container -->
+                        </div>
+                        <!-- End .col-6 col-md-3 -->
+
+                        <div class="col-6 col-md-3">
+                            <div class="count-container text-center">
+                                <div class="count-wrapper text-white">
+                                    <span class="count" data-from="0" data-to="2023" data-speed="1000"
+                                          data-refresh-interval="50">0</span>
+                                </div>
+                                <!-- End .count-wrapper -->
+                                <h3 class="count-title text-white">創立年份</h3><!-- End .count-title -->
+                            </div>
+                            <!-- End .count-container -->
+                        </div>
+                        <!-- End .col-6 col-md-3 -->
+
+                        <div class="col-6 col-md-3">
+                            <div class="count-container text-center">
+                                <div class="count-wrapper text-white">
+                                    <span class="count" data-from="0" data-to="69" data-speed="2000"
+                                          data-refresh-interval="50">0</span>%
+                                </div>
+                                <!-- End .count-wrapper -->
+                                <h3 class="count-title text-white">顧客回購率</h3><!-- End .count-title -->
+                            </div>
+                            <!-- End .count-container -->
+                        </div>
+                        <!-- End .col-6 col-md-3 -->
+
+                        <div class="col-6 col-md-3">
+                            <div class="count-container text-center">
+                                <div class="count-wrapper text-white">
+                                    <span class="count" data-from="0" data-to="2" data-speed="1000"
+                                          data-refresh-interval="50">0</span>
+                                </div>
+                                <!-- End .count-wrapper -->
+                                <h3 class="count-title text-white">團隊成員</h3><!-- End .count-title -->
+                            </div>
+                            <!-- End .count-container -->
+                        </div>
+                        <!-- End .col-6 col-md-3 -->
+                    </div>
+                    <!-- End .row -->
+                </div>
+                <!-- End .container -->
+            </div>
+            <!-- End .bg-image pt-8 pb-8 -->
+
+            <div class="bg-light-2 pt-6 pb-7 mb-6">
+                <div class="container">
+                    <h2 class="title text-center mb-4">團隊介紹</h2><!-- End .title text-center mb-2 -->
+
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="member member-2 text-center">
+                                <figure class="member-media">
+                                    <img src="../static/images/team/about-2/member-1.jpg" alt="member photo"/>
+
+                                    <figcaption class="member-overlay">
+                                        <div class="social-icons social-icons-simple">
+                                            <a href="#" class="social-icon" title="Facebook" target="_blank"><i
+                                                    class="icon-facebook-f"></i></a>
+                                            <a href="#" class="social-icon" title="Twitter" target="_blank"><i
+                                                    class="icon-twitter"></i></a>
+                                            <a href="#" class="social-icon" title="Instagram" target="_blank"><i
+                                                    class="icon-instagram"></i></a>
+                                        </div>
+                                        <!-- End .soial-icons -->
+                                    </figcaption>
+                                    <!-- End .member-overlay -->
+                                </figure>
+                                <!-- End .member-media -->
+                                <div class="member-content">
+                                    <h3 class="member-title">Eric Ma<span>Founder & CEO</span></h3>
+                                    <!-- End .member-title -->
+                                </div>
+                                <!-- End .member-content -->
+                            </div>
+                            <!-- End .member -->
+                        </div>
+                        <!-- End .col-lg-3 -->
+
+                        <div class="col-sm-3">
+                            <div class="member member-2 text-center">
+                                <figure class="member-media">
+                                    <img src="../static/images/team/about-2/member-2.jpg" alt="member photo"/>
+
+                                    <figcaption class="member-overlay">
+                                        <div class="social-icons social-icons-simple">
+                                            <a href="#" class="social-icon" title="Facebook" target="_blank"><i
+                                                    class="icon-facebook-f"></i></a>
+                                            <a href="#" class="social-icon" title="Twitter" target="_blank"><i
+                                                    class="icon-twitter"></i></a>
+                                            <a href="#" class="social-icon" title="Instagram" target="_blank"><i
+                                                    class="icon-instagram"></i></a>
+                                        </div>
+                                        <!-- End .soial-icons -->
+                                    </figcaption>
+                                    <!-- End .member-overlay -->
+                                </figure>
+                                <!-- End .member-media -->
+                                <div class="member-content">
+                                    <h3 class="member-title">Lerry Lai<span>Sales & Marketing Manager</span></h3>
+                                    <!-- End .member-title -->
+                                </div>
+                                <!-- End .member-content -->
+                            </div>
+                            <!-- End .member -->
+                        </div>
+                        <!-- End .col-lg-3 -->
+                    </div>
+                    <!-- End .row -->
+
+                    <div class="text-center mt-3">
+                        <a href="{{url_for('shop')}}" class="btn btn-sm btn-minwidth-lg btn-outline-primary-2">
+                            <span>前往商店</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </a>
+                    </div>
+                    <!-- End .text-center -->
+                </div>
+                <!-- End .container -->
+            </div>
+            <!-- End .bg-light-2 pt-6 pb-6 -->
+
+        </div>
+        <!-- End .page-content -->
+    </main>
+    <!-- End .main -->
+
+    <footer class="footer">
+        <div class="footer-middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget widget-about">
+                            <img src="../static/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25" style="transform: scale(1.1);"/>
+
+                            <p>頂級棉被經銷商</p>
+
+                            <div class="social-icons">
+                                <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                        class="icon-facebook-f"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                        class="icon-twitter"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                        class="icon-instagram"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                        class="icon-youtube"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                        class="icon-pinterest"></i></a>
+                            </div>
+                            <!-- End .soial-icons -->
+                        </div>
+                        <!-- End .widget about-widget -->
+                    </div>
+                    <!-- End .col-sm-6 col-lg-3 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">相關資訊</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li>
+                                    <a href="{{url_for('about')}}">關於我們</a>
+                                </li>
+                                <li>
+                                    <a href="{{url_for('faq')}}">常見問題</a>
+                                </li>
+                                <li>
+                                    <a href="{{url_for('contact')}}">聯絡我們</a>
+                                </li>
+                            </ul>
+                            <!-- End .widget-list -->
+                        </div>
+                        <!-- End .widget -->
+                    </div>
+                    <!-- End .col-sm-6 col-lg-3 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">我的帳號</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li>
+                                    <a href="{{url_for('login')}}">會員管理</a>
+                                </li>
+                                <li>
+                                    <a href="{{url_for('cart')}}">查看購物車</a>
+                                </li>
+                            </ul>
+                            <!-- End .widget-list -->
+                        </div>
+                        <!-- End .widget -->
+                    </div>
+                    <!-- End .col-sm-6 col-lg-3 -->
+                </div>
+                <!-- End .row -->
+            </div>
+            <!-- End .container -->
+        </div>
+        <!-- End .footer-middle -->
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="footer-copyright">Copyright © 2024 Mirai. All Rights Reserved.</p>
+                <!-- End .footer-copyright -->
+                <figure class="footer-payments">
+                    <img src="../static/images/payments.png" alt="Payment methods" width="272" height="20"/>
+                </figure>
+                <!-- End .footer-payments -->
+            </div>
+            <!-- End .container -->
+        </div>
+        <!-- End .footer-bottom -->
+    </footer>
+    <!-- End .footer -->
+</div>
+<!-- End .page-wrapper -->
+<button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-overlay"></div>
+<!-- End .mobil-menu-overlay -->
+
+<div class="mobile-menu-container">
+    <div class="mobile-menu-wrapper">
+        <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+        <form action="#" method="get" class="mobile-search">
+            <label for="mobile-search" class="sr-only">Search</label>
+            <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..."
+                   required/>
+            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+        </form>
+
+        <nav class="mobile-nav">
+            <ul class="mobile-menu">
+                <li class="active">
+                    <a href="{{url_for('index')}}">首頁</a>
+
+                    <ul>
+                        <li><a href="{{url_for('index')}}">回到首頁</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{url_for('shop')}}">商店</a>
+                    <ul>
+                        <li><a href="{{url_for('shop')}}">前往商店</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">相關資訊</a>
+                    <ul>
+                        <li><a href="{{url_for('about')}}">關於我們</a></li>
+                        <li><a href="{{url_for('contact')}}">聯絡我們</a></li>
+                        <li><a href="{{url_for('faq')}}">常見問題</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ url_for('login') }}">
+                        {% if username != None %}
+                        {{ username }}
+                        {% else %}
+                        登入
+                        {% endif %}
+                    </a>
+                    <ul>
+                        <li><a href="{{ url_for('login') }}">
+                            {% if username != None %}
+                            會員設定
+                            {% else %}
+                            登入
+                            {% endif %}
+                        </a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav><!-- End .mobile-nav -->
+
+        <div class="social-icons">
+            <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+            <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+        </div>
+        <!-- End .social-icons -->
+    </div>
+    <!-- End .mobile-menu-wrapper -->
+</div>
+<!-- End .mobile-menu-container -->
+
+<!-- Sign in / Register Modal -->
+<div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
+                        class="icon-close"></i></span></button>
+
+                <div class="form-box">
+                    <div class="form-tab">
+                        <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab"
+                                   aria-controls="signin" aria-selected="true">登入</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
+                                   aria-controls="register" aria-selected="false">註冊</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="tab-content-5">
+                            <div class="tab-pane fade show active" id="signin" role="tabpanel"
+                                 aria-labelledby="signin-tab">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <label for="singin-email">電子郵件 *</label>
+                                        <input type="text" class="form-control" id="singin-email" name="singin-email"
+                                               required/>
+                                    </div>
+                                    <!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="singin-password">密碼 *</label>
+                                        <input type="password" class="form-control" id="singin-password"
+                                               name="singin-password" required/>
+                                    </div>
+                                    <!-- End .form-group -->
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2">
+                                            <span>登入</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="signin-remember"/>
+                                            <label class="custom-control-label" for="signin-remember">記住我</label>
+                                        </div>
+                                        <!-- End .custom-checkbox -->
+
+                                        <a href="#" class="forgot-link">忘記密碼？</a>
+                                    </div>
+                                    <!-- End .form-footer -->
+                                </form>
+                                <div class="form-choice">
+                                    <p class="text-center">或是換個登入方式</p>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-g">
+                                                <i class="icon-google"></i>
+                                                Google 登入
+                                            </a>
+                                        </div>
+                                        <!-- End .col-6 -->
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-f">
+                                                <i class="icon-facebook-f"></i>
+                                                Facebook 登入
+                                            </a>
+                                        </div>
+                                        <!-- End .col-6 -->
+                                    </div>
+                                    <!-- End .row -->
+                                </div>
+                                <!-- End .form-choice -->
+                            </div>
+                            <!-- .End .tab-pane -->
+                            <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <label for="register-email">您的電子郵件 *</label>
+                                        <input type="email" class="form-control" id="register-email"
+                                               name="register-email" required/>
+                                    </div>
+                                    <!-- End .form-group -->
+
+                                    <div class="form-group">
+                                        <label for="register-password">密碼 *</label>
+                                        <input type="password" class="form-control" id="register-password"
+                                               name="register-password" required/>
+                                    </div>
+                                    <!-- End .form-group -->
+
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-outline-primary-2">
+                                            <span>註冊</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="register-policy"
+                                                   required/>
+                                            <label class="custom-control-label" for="register-policy">我同意 <a
+                                                    href="#">隱私權政策</a> *</label>
+                                        </div>
+                                        <!-- End .custom-checkbox -->
+                                    </div>
+                                    <!-- End .form-footer -->
+                                </form>
+                                <div class="form-choice">
+                                    <p class="text-center">或是用別的方式註冊</p>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-g">
+                                                <i class="icon-google"></i>
+                                                Google 登入
+                                            </a>
+                                        </div>
+                                        <!-- End .col-6 -->
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-login btn-f">
+                                                <i class="icon-facebook-f"></i>
+                                                Facebook 登入
+                                            </a>
+                                        </div>
+                                        <!-- End .col-6 -->
+                                    </div>
+                                    <!-- End .row -->
+                                </div>
+                                <!-- End .form-choice -->
+                            </div>
+                            <!-- .End .tab-pane -->
+                        </div>
+                        <!-- End .tab-content -->
+                    </div>
+                    <!-- End .form-tab -->
+                </div>
+                <!-- End .form-box -->
+            </div>
+            <!-- End .modal-body -->
+        </div>
+        <!-- End .modal-content -->
+    </div>
+    <!-- End .modal-dialog -->
+</div>
+<!-- End .modal -->
+
+<!-- Plugins JS File -->
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>
+<script src="../static/js/jquery.hoverIntent.min.js"></script>
+<script src="../static/js/jquery.waypoints.min.js"></script>
+<script src="../static/js/superfish.min.js"></script>
+<script src="../static/js/owl.carousel.min.js"></script>
+<script src="../static/js/jquery.countTo.js"></script>
+<!-- Main JS File -->
+<script src="../static/js/main.js"></script>
+</body>
+
+<!-- molla/about-2.html 22 Nov 2019 10:04:01 GMT -->
+</html>
