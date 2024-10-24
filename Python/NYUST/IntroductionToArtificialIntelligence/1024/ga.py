@@ -1,4 +1,5 @@
 import random
+from collections import Counter
 from typing import List, Tuple, Optional
 
 import numpy as np
@@ -34,10 +35,9 @@ class GeneticAlgorithm:
         :param N: Number of tasks
         :return: Initialized population
         """
-        # TODO: Initialize individuals based on the number of students M and number of tasks N
         population = []
         for _ in range(self.pop_size):
-            individual = [-1] * N # Create an individual with -1 indicating unassigned tasks
+            individual = [-1] * N  # Create an individual with -1 indicating unassigned tasks
             tasks = list(range(N))
 
             # Assign at least one task to each student
@@ -55,17 +55,66 @@ class GeneticAlgorithm:
 
     def _fitness(self, individual: List[int], student_times: np.ndarray) -> float:
         """
-        Fitness function: calculate the fitness value of an individual.
-        :param individual: Individual
+        Fitness function: calculate the fitness value of an individual ensuring each student gets at least one task.
+
+        :param individual: Individual representing student assignments
         :param student_times: Time required for each student to complete each task
-        :return: Fitness value
+        :return: Fitness value (total time)
         """
-        # TODO: Design a fitness function to compute the fitness value of the allocation plan
+        num_tasks = np.size(student_times, 1)
+        task_assignments = [-1] * num_tasks
+        assigned_students = set()
         total_time = 0
-        # Calculate total time for the individual based on task assignments
-        for task_idx, student_idx in enumerate(individual):
-            total_time += student_times[student_idx][task_idx]
-        return total_time  # Lower total time means better fitness
+
+        # First pass: Assign tasks optimally
+        for task in range(num_tasks):
+            min_time = float('inf')
+            best_student = -1
+
+            # Find the student who can complete this task in minimum time
+            for student in individual:
+                time = student_times[student][task]
+                if time < min_time:
+                    min_time = time
+                    best_student = student
+
+            task_assignments[task] = best_student
+            assigned_students.add(best_student)
+            total_time += min_time
+
+        # Second pass: Ensure all students have at least one task
+        unassigned_students = set(individual) - assigned_students
+        if unassigned_students:
+            # For each unassigned student
+            for student in unassigned_students:
+                # Find the best task to reassign to this student
+                min_additional_cost = float('inf')
+                best_task = -1
+
+                for task in range(num_tasks):
+                    current_student = task_assignments[task]
+                    current_time = student_times[current_student][task]
+                    new_time = student_times[student][task]
+
+                    # Calculate the additional cost of reassignment
+                    additional_cost = new_time - current_time
+
+                    # Check if this is the best reassignment so far
+                    if additional_cost < min_additional_cost:
+                        # Only consider this reassignment if the current student has multiple tasks
+                        student_task_count = task_assignments.count(current_student)
+                        if student_task_count > 1:
+                            min_additional_cost = additional_cost
+                            best_task = task
+
+                if best_task != -1:
+                    # Update total time and assignments
+                    total_time += min_additional_cost
+                    task_assignments[best_task] = student
+
+        return total_time
+
+
 
     def _selection(self, population: List[List[int]], fitness_scores: List[float]) -> List[int]:
         """
@@ -74,10 +123,7 @@ class GeneticAlgorithm:
         :param fitness_scores: Fitness scores for each individual
         :return: Selected parent
         """
-        # TODO: Use tournament selection to choose parents based on fitness scores
-        # Conduct a tournament selection to find the best individual
         tournament = random.sample(list(zip(population, fitness_scores)), self.tournament_size)
-        # Select the individual with the lowest fitness score (since we want to minimize time)
         best_individual = min(tournament, key=lambda x: x[1])[0]
         return best_individual
 
@@ -89,7 +135,6 @@ class GeneticAlgorithm:
         :param M: Number of students
         :return: Generated offspring
         """
-        # TODO: Complete the crossover operation to generate two offspring
         if random.random() > self.crossover_rate:
             return parent1, parent2  # No crossover; return parents as offspring
 
@@ -117,7 +162,6 @@ class GeneticAlgorithm:
         :param M: Number of students
         :return: Mutated individual
         """
-        # TODO: Implement the mutation operation to randomly modify genes
         for task_idx in range(len(individual)):
             if random.random() < self.mutation_rate:
                 individual[task_idx] = random.randint(0, M - 1)
@@ -139,22 +183,25 @@ class GeneticAlgorithm:
         :param student_times: Time required for each student to complete each task
         :return: Optimal allocation plan and total time cost
         """
-        # TODO: Complete the genetic algorithm process, including initialization, selection, crossover, mutation, and elitism strategy
-        # 1. Initialize population
+        # Initialize population
         population = self._init_population(M, N)
+        fitness_values = []  # 用於記錄每次的適應度值
 
         for generation in range(self.generations):
-            # 2. Calculate fitness for the population
+            # Calculate fitness for the population
             fitness_scores = [self._fitness(individual, student_times) for individual in population]
 
-            # 3. Apply elitism (carry the best individual to the next generation)
+            # 記錄每次的 fitness 值
+            fitness_values.extend(fitness_scores)
+
+            # Apply elitism (carry the best individual to the next generation)
             if self.elitism:
                 best_individual = min(population, key=lambda ind: self._fitness(ind, student_times))
                 next_population = [best_individual]
             else:
                 next_population = []
 
-            # 4. Generate new population through selection, crossover, and mutation
+            # Generate new population through selection, crossover, and mutation
             while len(next_population) < self.pop_size:
                 # Selection
                 parent1 = self._selection(population, fitness_scores)
@@ -175,9 +222,16 @@ class GeneticAlgorithm:
             # Replace the old population with the new one
             population = next_population
 
-        # 5. Find the best individual in the final population
-        best_individual = min(population, key=lambda ind: self._fitness(ind, student_times))
-        total_time = self._fitness(best_individual, student_times)
+        # 使用 Counter 找出出現最多次的適應度值
+        most_common_fitness = Counter(fitness_values).most_common(1)
+        if most_common_fitness:
+            most_common_value = most_common_fitness[0][0]
+            # 根據最常見的 fitness 值找出最佳個體
+            best_individual = min(population, key=lambda ind: abs(self._fitness(ind, student_times) - most_common_value))
+        else:
+            best_individual = None  # 或者你可以設定為其他預設值
+
+        total_time = self._fitness(best_individual, student_times) if best_individual else float('inf')
 
         return best_individual, int(total_time)
 
