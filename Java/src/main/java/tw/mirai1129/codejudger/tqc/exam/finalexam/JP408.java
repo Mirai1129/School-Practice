@@ -1,0 +1,34 @@
+package tw.mirai1129.codejudger.tqc.exam.finalexam;
+
+import java.util.Scanner;
+
+public class JP408 {
+
+	public static void main(String[] args) {
+
+		try {
+			Scanner sc = new Scanner(System.in);
+			String data1 = sc.nextLine();
+			sc.close();
+			String[] data = data1.split(":");
+			int day = Integer.parseInt(data[0]) / 8;
+			int hour = Integer.parseInt(data[0]) % 8;
+			int min = Integer.parseInt(data[1]);
+			if (min > 60) {
+				System.out.println("error");
+				return;
+			}
+			System.out.println(day + "d:" + hour + "h:" + min + "m");
+
+			// TO DO
+
+
+
+
+
+		} catch (Exception ex) {
+			System.out.print("error");
+			return;
+		}
+	}
+}
