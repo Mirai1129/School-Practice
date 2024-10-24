@@ -37,8 +37,19 @@ class GeneticAlgorithm:
         # TODO: Initialize individuals based on the number of students M and number of tasks N
         population = []
         for _ in range(self.pop_size):
-            # Create an individual where each task is randomly assigned to a student
-            individual = [random.randint(0, M - 1) for _ in range(N)]
+            individual = [-1] * N # Create an individual with -1 indicating unassigned tasks
+            tasks = list(range(N))
+
+            # Assign at least one task to each student
+            for student in range(M):
+                task_idx = random.choice(tasks)
+                individual[task_idx] = student
+                tasks.remove(task_idx)
+
+            # Randomly assign remaining tasks
+            for task in tasks:
+                individual[task] = random.randint(0, M - 1)
+
             population.append(individual)
         return population
 
@@ -51,6 +62,7 @@ class GeneticAlgorithm:
         """
         # TODO: Design a fitness function to compute the fitness value of the allocation plan
         total_time = 0
+        # Calculate total time for the individual based on task assignments
         for task_idx, student_idx in enumerate(individual):
             total_time += student_times[student_idx][task_idx]
         return total_time  # Lower total time means better fitness
@@ -63,6 +75,7 @@ class GeneticAlgorithm:
         :return: Selected parent
         """
         # TODO: Use tournament selection to choose parents based on fitness scores
+        # Conduct a tournament selection to find the best individual
         tournament = random.sample(list(zip(population, fitness_scores)), self.tournament_size)
         # Select the individual with the lowest fitness score (since we want to minimize time)
         best_individual = min(tournament, key=lambda x: x[1])[0]
@@ -83,6 +96,18 @@ class GeneticAlgorithm:
         crossover_point = random.randint(1, len(parent1) - 1)
         offspring1 = parent1[:crossover_point] + parent2[crossover_point:]
         offspring2 = parent2[:crossover_point] + parent1[crossover_point:]
+
+        # Ensure each student is assigned at least one task
+        for student in range(M):
+            if student not in offspring1:
+                task_to_reassign = random.choice([task for task in range(len(offspring1)) if offspring1[task] != student])
+                offspring1[task_to_reassign] = student
+
+        for student in range(M):
+            if student not in offspring2:
+                task_to_reassign = random.choice([task for task in range(len(offspring2)) if offspring2[task] != student])
+                offspring2[task_to_reassign] = student
+
         return offspring1, offspring2
 
     def _mutate(self, individual: List[int], M: int) -> List[int]:
@@ -95,8 +120,15 @@ class GeneticAlgorithm:
         # TODO: Implement the mutation operation to randomly modify genes
         for task_idx in range(len(individual)):
             if random.random() < self.mutation_rate:
-                # Mutate this gene (reassign the task to a different random student)
                 individual[task_idx] = random.randint(0, M - 1)
+
+        # Ensure each student is assigned at least one task after mutation
+        assigned_students = set(individual)
+        for student in range(M):
+            if student not in assigned_students:
+                task_to_reassign = random.choice([task for task in range(len(individual)) if individual[task] != student])
+                individual[task_to_reassign] = student
+
         return individual
 
     def __call__(self, M: int, N: int, student_times: np.ndarray) -> Tuple[List[int], int]:
@@ -254,8 +286,8 @@ if __name__ == "__main__":
     # Example for GA execution:
     # TODO: Please set the parameters for the genetic algorithm
     ga = GeneticAlgorithm(
-        pop_size=1000,  # 族群大小
-        generations=2000,  # 世代數
+        pop_size=100,  # 族群大小
+        generations=200,  # 世代數
         mutation_rate=0.02,  # 突變機率
         crossover_rate=0.8,  # 交叉機率
         tournament_size=3,  # 錦標賽大小
