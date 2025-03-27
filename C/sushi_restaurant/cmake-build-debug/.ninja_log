@@ -1,0 +1,6 @@
+# ninja log v6
+100	166	7518055799801051	untitled.exe	940764c86c8cc4b9
+1	1368	7524101859944245	build.ninja	1cae60a09cf68bc8
+95	161	7524092758718127	sushi_restaurant.exe	c84357fe7feb8a4a
+24	95	7524092758005495	CMakeFiles/sushi_restaurant.dir/sushi_restaurant.c.obj	aee0d3bcc8cd5026
+82	171	7524089900546804	sushi1.exe	a2b65576a7b7aeb5
